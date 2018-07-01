@@ -61,6 +61,7 @@ public class Repository<T> {
     }
 
 
+
     public synchronized Connection getConnection () {
         synchronized (lock) {
             try {
@@ -324,12 +325,16 @@ public class Repository<T> {
 
     }
 
+
+
     static class WrapperPool {
         private SQLiteConnectionPoolDataSource dataSource = new SQLiteConnectionPoolDataSource ();
         public MiniConnectionPoolManager poolMgr;
 
         WrapperPool ( String basename ) {
             dataSource.setUrl ( basename );
+            dataSource.setJournalMode("WAL");
+            dataSource.getConfig().setBusyTimeout("10000");
             poolMgr = new MiniConnectionPoolManager ( dataSource , 10 );
         }
     }
